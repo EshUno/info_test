@@ -9,9 +9,7 @@ class SharedFile final
 {
 public:
     SharedFile(int fd);
-
     void PutData(const std::string &str);
-
     int WaitAndGetData();
 
 private:

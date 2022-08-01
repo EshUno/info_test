@@ -13,15 +13,15 @@
 #include <sys/socket.h>
 #include <addr.h>
 #include "SharedFile.h"
+#include "sharedbuf.h"
 
 int create_tmp_file(std::string &filename)
 {
     char tempFileName[] = "/tmp/cppp_writer.XXXXXX";
-    errno = 0;
     int ret = mkstemp(tempFileName);
     if (ret == -1)
     {
-        throw std::runtime_error(strerror(errno));
+        throw std::runtime_error("problem with file create");
     }
     filename = std::string(tempFileName);
     return ret;
@@ -42,7 +42,7 @@ bool comp (const char a, const char b)
     return a > b;
 }
 
-void thread_1(SharedFile &shared_file)
+void threa_1(SharedFile &shared_file)
 {
     std::string str;
     std::cout<< "Press ctrl+с for end" << std::endl;
@@ -75,7 +75,7 @@ void thread_1(SharedFile &shared_file)
     return;
 }
 
-void thread_2(SharedFile & shared_file)
+void threa_2(SharedFile & shared_file)
 {
     int sock = socket(AF_UNIX, SOCK_STREAM, 0);
     bool connected = false;
@@ -115,7 +115,7 @@ void thread_2(SharedFile & shared_file)
 }
 
 
-int main()
+int mai()
 {
     std::string filename;
     int fd;
@@ -126,10 +126,9 @@ int main()
         std::exit(1);
     }
     SharedFile shared_file(fd);
-    auto thr2 = std::thread(thread_2, std::ref(shared_file));
-    thread_1(shared_file);
+    auto thr2 = std::thread(threa_2, std::ref(shared_file));
+    threa_1(shared_file);
     thr2.join();
-	thr1.join();
     close(fd);
     unlink(filename.c_str());
     return 0;

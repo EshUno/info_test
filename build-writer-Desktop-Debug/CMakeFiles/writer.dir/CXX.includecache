@@ -1,0 +1,28 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/esh/Рабочий стол/git_info_test/writer/sharedbuf.h
+condition_variable
+-
+mutex
+-
+string
+-
+iostream
+-
+
+/home/esh/Рабочий стол/git_info_test/writer/writer.cpp
+sharedbuf.h
+/home/esh/Рабочий стол/git_info_test/writer/sharedbuf.h
+algorithm
+-
+thread
+-
+signal.h
+-
+
