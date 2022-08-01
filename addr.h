@@ -1,6 +1,6 @@
 #ifndef ADDR_H
 #define ADDR_H
 
-const char * const SOCKADDR_UNIX = "/tmp/cpp.sock";
+const int PORT_NUM = 6500 ;
 
 #endif // ADDR_H

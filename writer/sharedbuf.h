@@ -5,16 +5,17 @@
 #include <mutex>
 #include <string>
 #include <iostream>
+#include <queue>
 
 class SharedBuf final
 {
 public:
     SharedBuf();
     void put_data(const std::string &str);
-    int wait_and_get_data();
+    std::queue<int> wait_and_get_data();
 
 private:
-    std::string buf;
+    std::queue<std::string> buff;
     bool data_ready;
     std::mutex mtx;
     std::condition_variable cv;
