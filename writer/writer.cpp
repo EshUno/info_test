@@ -55,6 +55,7 @@ void thread_1(SharedBuf &shared_buf)
         }
         else std::cout<<"Wrong string"<<std::endl;
     }
+    shared_buf.stop();
     return;
 }
 
@@ -70,18 +71,18 @@ void thread_2(SharedBuf &shared_buf)
     addr.sin_port = htons(PORT_NUM);
     addr.sin_addr.s_addr = inet_addr("127.0.0.1");
 
-    while (true)
+
+
+    /*while (true)
     {
+        auto sum = shared_buf.wait_and_get_data();
+        while(!sum.empty() && !connect(sock, reinterpret_cast<struct sockaddr *>( &addr), sizeof(addr)))
+        {
+            if (send(sock, reinterpret_cast<void *>(&sum.front()), sizeof(sum.front()), 0))
+                sum.pop();
+        }
+    }*/
 
-
-
-    }
-
-
-
-
-
-    auto sum = shared_buf.wait_and_get_data();
     close(sock);
 }
 
