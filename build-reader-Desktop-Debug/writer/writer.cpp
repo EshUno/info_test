@@ -26,13 +26,21 @@ void thread_1(SharedBuf &shared_buf)
     {
         if ((data.size() <= 64) && (all_sym_id_digit(data)))
         {
-            std::cout<<data<<std::endl;
+            for (auto w: data){
+                std::cout<<w<<std::endl;
+            }
+
             std::sort(data.begin(), data.end(), [](auto a, auto b){ return a > b;});
-            std::cout<<data<<std::endl;
+
+            for (auto w: data){
+                std::cout<<w<<std::endl;
+            }
+
             std::string ans;
             for(auto &symbol: data)
             {
                 int dig = symbol - '0';
+                std::cout<<dig<<std::endl;
                 if (dig % 2)
                 {
                     ans += symbol;
@@ -43,7 +51,10 @@ void thread_1(SharedBuf &shared_buf)
                 }
             }
             shared_buf.put_data(ans);
-            std::cout<<ans<<std::endl;
+
+            for (auto w: ans){
+                std::cout<<w<<std::endl;
+            }
         }
         else std::cout<<"Wrong string"<<std::endl;
     }
@@ -52,8 +63,11 @@ void thread_1(SharedBuf &shared_buf)
 
 void thread_2(SharedBuf &shared_buf)
 {
-    // TODO: sockets
-    int sum = shared_buf.wait_and_get_data();
+
+
+
+
+    return;
 }
 
 int main()
@@ -71,3 +85,6 @@ int main()
  //   thr2.join();
     return 0;
 }
+
+
+
