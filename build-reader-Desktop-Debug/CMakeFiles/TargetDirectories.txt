@@ -1,3 +1,0 @@
-/home/esh/Рабочий стол/git_info_test/build-reader-Desktop-Debug/CMakeFiles/rebuild_cache.dir
-/home/esh/Рабочий стол/git_info_test/build-reader-Desktop-Debug/CMakeFiles/edit_cache.dir
-/home/esh/Рабочий стол/git_info_test/build-reader-Desktop-Debug/CMakeFiles/reader.dir

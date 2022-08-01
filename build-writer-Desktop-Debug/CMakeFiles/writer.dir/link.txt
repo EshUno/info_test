@@ -1,1 +1,0 @@
-/usr/bin/g++  -g  -rdynamic CMakeFiles/writer.dir/writer.cpp.o CMakeFiles/writer.dir/sharedbuf.cpp.o  -o writer  -lpthread 
