@@ -1,4 +1,5 @@
 #include "sharedbuf.h"
+#include "thread_1.h"
 #include "addr.h"
 #include <algorithm>
 #include <thread>
@@ -10,23 +11,13 @@
 #include <unistd.h>
 #include <cstring>
 
-
-bool all_sym_id_digit(std::string &data)
-{
-    for (auto &symbol: data)
-    {
-        if (!isdigit(symbol)) return false;
-    }
-    return true;
-}
-
 /*static void sig_handler(int sig)
 {
 
 }*/
 
 
-void thread_1(SharedBuf &shared_buf)
+/*void thread_1(SharedBuf &shared_buf)
 {
     std::string data;
     const std::string KB = "KB";
@@ -55,7 +46,7 @@ void thread_1(SharedBuf &shared_buf)
     }
     shared_buf.stop();
     return;
-}
+}*/
 
 void thread_2(SharedBuf &shared_buf)
 {
@@ -97,22 +88,19 @@ void thread_2(SharedBuf &shared_buf)
 int main()
 {
     SharedBuf shared_buf;
-    try
-    {
-        auto thr1 = std::thread(thread_1, std::ref(shared_buf));
-        auto thr2 = std::thread(thread_2, std::ref(shared_buf));
+    thread_1 thr1(shared_buf);
+    thr1.start_thr1();
+
+    auto thr2 = std::thread(thread_2, std::ref(shared_buf));
 
      /*   if(signal(SIGINT, sig_handler) == SIG_ERR)
            std::cerr<< "signal processing" << std::endl;
         if(signal(SIGTERM, sig_handler) == SIG_ERR)
            std::cerr<< "signal processing" << std::endl;
     */
-        thr1.join();
-        thr2.join();
-    }  catch (const std::exception &ex)
-    {
-        std::cout << ex.what() << std::endl;
-    }
+    thr1.stop_thr1();
+    thr2.join();
+
 
     return 0;
 }
