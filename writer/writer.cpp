@@ -62,7 +62,7 @@ void thread_1(SharedBuf &shared_buf)
 void thread_2(SharedBuf &shared_buf)
 {
     // TODO: sockets
-    int sock = socket(AF_INET, SOCK_STREAM, 0);
+    /*int sock = socket(AF_INET, SOCK_STREAM, 0);
     if (sock < 0) std::cerr<< "socket failed" << std::endl;
 
     struct sockaddr_in addr;
@@ -73,7 +73,7 @@ void thread_2(SharedBuf &shared_buf)
 
 
 
-    /*while (true)
+    while (true)
     {
         auto sum = shared_buf.wait_and_get_data();
         while(!sum.empty() && !connect(sock, reinterpret_cast<struct sockaddr *>( &addr), sizeof(addr)))
@@ -81,23 +81,36 @@ void thread_2(SharedBuf &shared_buf)
             if (send(sock, reinterpret_cast<void *>(&sum.front()), sizeof(sum.front()), 0))
                 sum.pop();
         }
-    }*/
+    }
 
-    close(sock);
+    close(sock);*/
+    auto sum = shared_buf.wait_and_get_data();
+    while (!sum.empty())
+    {
+        std::cout<<sum.front()<<std::endl;
+        sum.pop();
+    }
 }
 
 int main()
 {
     SharedBuf shared_buf;
-    auto thr1 = std::thread(thread_1, std::ref(shared_buf));
- //   auto thr2 = std::thread(thread_2, std::ref(shared_buf));
+    try
+    {
+        auto thr1 = std::thread(thread_1, std::ref(shared_buf));
+        auto thr2 = std::thread(thread_2, std::ref(shared_buf));
 
- /*   if(signal(SIGINT, sig_handler) == SIG_ERR)
-       std::cerr<< "signal processing" << std::endl;
-    if(signal(SIGTERM, sig_handler) == SIG_ERR)
-       std::cerr<< "signal processing" << std::endl;
-*/
-    thr1.join();
- //   thr2.join();
+     /*   if(signal(SIGINT, sig_handler) == SIG_ERR)
+           std::cerr<< "signal processing" << std::endl;
+        if(signal(SIGTERM, sig_handler) == SIG_ERR)
+           std::cerr<< "signal processing" << std::endl;
+    */
+        thr1.join();
+        thr2.join();
+    }  catch (const std::exception &ex)
+    {
+        std::cout << ex.what() << std::endl;
+    }
+
     return 0;
 }
