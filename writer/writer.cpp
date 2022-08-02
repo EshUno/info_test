@@ -25,6 +25,7 @@ bool all_sym_id_digit(std::string &data)
 
 }*/
 
+
 void thread_1(SharedBuf &shared_buf)
 {
     std::string data;
@@ -32,11 +33,10 @@ void thread_1(SharedBuf &shared_buf)
     std::cout<< "Press ctrl+с for end" << std::endl;
     while (std::getline(std::cin, data))
     {
-        if ((data.size() <= 64) && (all_sym_id_digit(data)))
+        if (!(data.size() <= 64) || !(all_sym_id_digit(data))) std::cout<<"Wrong string"<<std::endl;
+        else
         {
-            std::cout<<data<<std::endl;
             std::sort(data.begin(), data.end(), [](auto a, auto b){ return a > b;});
-            std::cout<<data<<std::endl;
             std::string ans;
             for(auto &symbol: data)
             {
@@ -51,9 +51,7 @@ void thread_1(SharedBuf &shared_buf)
                 }
             }
             shared_buf.put_data(ans);
-            std::cout<<ans<<std::endl;
         }
-        else std::cout<<"Wrong string"<<std::endl;
     }
     shared_buf.stop();
     return;
@@ -84,12 +82,16 @@ void thread_2(SharedBuf &shared_buf)
     }
 
     close(sock);*/
-    auto sum = shared_buf.wait_and_get_data();
-    while (!sum.empty())
-    {
-        std::cout<<sum.front()<<std::endl;
-        sum.pop();
+    while(true){
+        auto sum = shared_buf.wait_and_get_data();
+        if (sum.empty()) return;
+        while (!sum.empty())
+        {
+            std::cout<<sum.front()<<"sum_front"<<std::endl;
+            sum.pop();
+        }
     }
+
 }
 
 int main()
