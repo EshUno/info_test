@@ -8,10 +8,10 @@ thread_1::thread_1(SharedBuf &buf): shared_buf(buf)
 
 thread_1::~thread_1()
 {
-    stop_thr1();
+    stop();
 }
 
-void thread_1::start_thr1()
+void thread_1::start()
 {
     thr1 = std::thread(&thread_1::work, this);
 }
@@ -47,7 +47,7 @@ void thread_1::work()
 
 }
 
-void thread_1::stop_thr1()
+void thread_1::stop()
 {
     if (thr1.joinable())
         thr1.join();

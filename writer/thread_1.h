@@ -2,8 +2,6 @@
 #define THREAD_1_H
 
 #include "sharedbuf.h"
-#include <string>
-#include <iostream>
 #include <thread>
 
 class thread_1
@@ -11,8 +9,8 @@ class thread_1
 public:
     thread_1(SharedBuf &buf);
     ~thread_1();
-    void start_thr1();
-    void stop_thr1();
+    void start();
+    void stop();
 
 private:
     void work();
