@@ -3,6 +3,7 @@
 
 #include "sharedbuf.h"
 #include <thread>
+#include <arpa/inet.h>
 
 class thread_2
 {
@@ -16,6 +17,8 @@ private:
     void work();
     SharedBuf &shared_buf;
     std::thread thr2;
+    int sock;
+    struct sockaddr_in addr;
 };
 
 #endif // THREAD_2_H

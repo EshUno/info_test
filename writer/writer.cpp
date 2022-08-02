@@ -5,18 +5,8 @@
 #include <algorithm>
 #include <thread>
 #include <signal.h>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <arpa/inet.h>
-#include <netinet/in.h>
-#include <unistd.h>
+
 #include <cstring>
-
-/*static void sig_handler(int sig)
-{
-
-}*/
-
 int main()
 {
     try{
@@ -44,14 +34,8 @@ int main()
                 std::cerr << "sigwait" << std::endl;
                 return 1;
             }
-
-            std::cout << "shutting down gracefully: " <<
-                         sig << " (" << strsignal(sig) << ")" << std::endl;
-
             thr1.stop();
-            /// ---->
             shared_buf.stop();
-            /// <---
             thr2.stop();
         }
     }
