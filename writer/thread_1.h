@@ -13,10 +13,12 @@ public:
     void stop();
 
 private:
-    void work();
+    int pipe_fd[2];
     SharedBuf &shared_buf;
     std::thread thr1;
     const std::string KB = "KB";
+    void work();
+    bool work_getline(std::string &data);
     bool all_sym_is_digit(std::string &data);
 };
 
