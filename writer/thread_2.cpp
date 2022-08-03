@@ -101,17 +101,17 @@ void thread_2::thr_connect()
             if (reconnect)
             {
                 std::this_thread::sleep_for(std::chrono::milliseconds(2000));
-                //if (!(connect(sock, reinterpret_cast<struct sockaddr *>( &addr), sizeof(addr)) < 0))
-                    //reconnect = false;
+                if (!(connect(sock, reinterpret_cast<struct sockaddr *>( &addr), sizeof(addr)) < 0))
+                    reconnect = false;
                 reconnect = false;
             }
             if(!reconnect)
             {
                 std::cout<< sum << std::endl;
-                sum = -1;
-                /*if ((send(sock, reinterpret_cast<void *>(&sum), sizeof(sum), 0)) < 0)
+                auto no = htonl(sum);
+                if ((send(sock, reinterpret_cast<void *>(&no), sizeof(sum), 0)) < 0)
                         reconnect = true;
-                else sum = -1;*/
+                else sum = -1;
             }
         }
     }

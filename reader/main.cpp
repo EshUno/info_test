@@ -5,67 +5,62 @@
 #include <iostream>
 #include "addr.h"
 #include <unistd.h>
+#include <arpa/inet.h>
 
 bool num_is_good(int num)
 {
-    return ((num / 100) && !(num % 32));
+    return ((num > 99) && (num % 32 == 0));
 }
 
 int main()
 {
-
-
-
-
-
-
-
-    /* int sock_listen = socket(AF_UNIX, SOCK_STREAM, 0), len = 0;
-    int sum;
-    struct sockaddr sa;
-    sa.sa_family = AF_UNIX;
-    strcpy(sa.sa_data, SOCKADDR_UNIX);
-    len = sizeof(sa.sa_family) + strlen(sa.sa_data);
     errno = 0;
-    unlink(SOCKADDR_UNIX);
-    if (bind(sock_listen, &sa, len) < 0)
+    int server_fd = socket(AF_INET, SOCK_STREAM, 0);
+    if (server_fd < 0)
     {
-        std::cout<<"Bind failed" << strerror(errno) <<std::endl;
-        return 0;
+        std::cout<< "socket failed"<< strerror(errno) << std::endl;
+        return 1;
     }
-    if (listen(sock_listen, SOMAXCONN) < 0)
+    struct sockaddr_in s_addr;
+    memset(&s_addr, 0, sizeof(struct sockaddr_in));
+    s_addr.sin_family = AF_INET;
+    s_addr.sin_port = htons(PORT_NUM);
+    s_addr.sin_addr.s_addr = htonl(INADDR_ANY);
+
+    if (bind(server_fd, (struct sockaddr *)&s_addr, sizeof(s_addr)) < 0)
     {
-        std::cout<<"Listen failed" << strerror(errno) <<std::endl;
-        return 0;
+        std::cout<<"bind failed" << strerror(errno) <<std::endl;
+        return 1;
     }
-    int sock = accept(sock_listen, NULL, NULL);
-    if (sock < 0)
+    if (listen(server_fd, SOMAXCONN) < 0)
     {
-         std::cout<<"Accept failed" << strerror(errno) <<std::endl;
-         return 0;
+        std::cout<<"listen failed" << strerror(errno) <<std::endl;
+        return 1;
     }
-    int maxLength = sizeof(sum);
-    errno = 0;
-    int rc = setsockopt(sock, SOL_SOCKET, SO_RCVLOWAT, &maxLength, sizeof(maxLength));
-    if (rc < 0)
+    int client_fd, sum;
+    for(;;)
     {
-         std::cout << "Setsockopt failed: " << strerror(errno) << std::endl;
-    }
-    while(true)
-    {
-        if (recv(sock, &sum, sizeof(int), 0) < 0)
-            break;
-        if (num_is_good(sum))
+        client_fd = accept(server_fd, NULL, NULL);
+        if (client_fd < 0)
         {
-            std::cout<<"Data has been received "<<sum<<std::endl;
+            std::cout<< "accept failed"<< strerror(errno) << std::endl;
+            return 1;
         }
-        else
+        while(true)
         {
-            std::cout<<"Error"<<std::endl;
+            if (recv(client_fd, &sum, sizeof(sum), 0) < 0)
+            {
+                std::cout<< "recv failed"<< strerror(errno) << std::endl;
+                return 1;
+            }
+            auto no = ntohl(sum);
+            if (num_is_good(no))
+                std::cout<< "got result: "<< no << std::endl;
+            else
+                std::cout<< "error "<< no << std::endl;
         }
     }
-    unlink(SOCKADDR_UNIX);
-    close(sock_listen);
-    close(sock);*/
+    close(client_fd);
+    close(server_fd);
     return 0;
 }
