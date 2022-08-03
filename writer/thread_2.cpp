@@ -86,6 +86,7 @@ void thread_2::thr_connect()
 {
     int sum = -1;
     bool reconnect = true;
+    bool first_connect = true;
     while(true)
     {
         {
@@ -100,7 +101,8 @@ void thread_2::thr_connect()
         {
             if (reconnect)
             {
-                std::this_thread::sleep_for(std::chrono::milliseconds(2000));
+                if (!first_connect) std::this_thread::sleep_for(std::chrono::milliseconds(2000));
+                first_connect = false;
                 if (!(connect(sock, reinterpret_cast<struct sockaddr *>( &addr), sizeof(addr)) < 0))
                     reconnect = false;
                 reconnect = false;

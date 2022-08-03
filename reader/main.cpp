@@ -48,11 +48,19 @@ int main()
         }
         while(true)
         {
-            if (recv(client_fd, &sum, sizeof(sum), 0) < 0)
+            int res = recv(client_fd, &sum, sizeof(sum), 0);
+            if (res < 0)
             {
                 std::cout<< "recv failed"<< strerror(errno) << std::endl;
                 return 1;
             }
+
+            if (res == 0)
+            {
+                std::cout << "writer has disconnected" << std::endl;
+                break;
+            }
+
             auto no = ntohl(sum);
             if (num_is_good(no))
                 std::cout<< "got result: "<< no << std::endl;
