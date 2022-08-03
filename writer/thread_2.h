@@ -8,6 +8,7 @@
 class thread_2
 {
 public:
+    //передаем ссылку на разделяемый буфер в конструктор
     thread_2(SharedBuf &buf);
     ~thread_2();
     void start();

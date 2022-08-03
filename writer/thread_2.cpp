@@ -15,7 +15,7 @@ thread_2::thread_2(SharedBuf &buf): shared_buf(buf)
 
 thread_2::~thread_2()
 {
-    stop();
+
 }
 
 void thread_2::start()
@@ -37,7 +37,7 @@ void thread_2::work()
 {   
     thr3 = std::thread(&thread_2::thr_connect, this);
     while(true){
-         //возвращает пустую строку если прервался поток 1
+         //возвращает пустую очередь если прервался поток 1
         auto sum_buff = shared_buf.wait_and_get_data();
         if (sum_buff.empty()) break;
         while (!sum_buff.empty())

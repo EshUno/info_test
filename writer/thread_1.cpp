@@ -11,7 +11,7 @@ thread_1::thread_1(SharedBuf &buf): shared_buf(buf)
 
 thread_1::~thread_1()
 {
-    stop();
+
 }
 
 void thread_1::start()
@@ -56,6 +56,8 @@ void thread_1::work()
 
 bool thread_1::work_getline(std::string &input)
 {
+    // опрашиваются 2 дескриптора - 0 на пользовательский ввод,
+    // 1 - на признак окончания
     struct pollfd pfds[2];
     pfds[0] = {STDIN_FILENO, POLLIN, 0};
     pfds[1] = {pipe_fd[0],POLLIN, 0};
@@ -66,6 +68,8 @@ bool thread_1::work_getline(std::string &input)
         ret = poll(pfds, 2, 100);
         if (ret > 0)
         {
+            //если что-то пришло по дескриптору 1 - значит пора остановиться
+            // а если на 0 - значит пришла новая строка
             if (pfds[1].revents & POLLIN) return true;
             if (pfds[0].revents & POLLIN)
             {
@@ -84,7 +88,6 @@ bool thread_1::work_getline(std::string &input)
 
 void thread_1::stop()
 {
-    // В поток через пайп передаем один любой байт в качестве сигнала остановки
     char byte = 0x42;
     write(pipe_fd[1], &byte, sizeof(byte));
 
