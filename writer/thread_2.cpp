@@ -1,15 +1,16 @@
 #include "thread_2.h"
 #include "addr.h"
 #include <sys/socket.h>
-
+#include <chrono>
 #include <netinet/in.h>
 #include <sys/types.h>
 #include <unistd.h>
 #include <cstring>
 
+
 thread_2::thread_2(SharedBuf &buf): shared_buf(buf)
 {
-
+    stopped = false;
 }
 
 thread_2::~thread_2()
@@ -34,20 +35,67 @@ void thread_2::start()
 
 void thread_2::work()
 {   
-
-    connect(sock, reinterpret_cast<struct sockaddr *>( &addr), sizeof(addr));
+    thr3 = std::thread(&thread_2::thr_connect, this);
     while(true){
-        //возвращает пустую строку если прервался поток 1
-        auto sum = shared_buf.wait_and_get_data();
-        if (sum.empty()) stop();
-        while (!sum.empty())
+         //возвращает пустую строку если прервался поток 1
+        auto sum_buff = shared_buf.wait_and_get_data();
+        if (sum_buff.empty()) break;
+        while (!sum_buff.empty())
         {
-            send(sock, reinterpret_cast<void *>(&sum.front()), sizeof(sum.front()), 0);
-            sum.pop();
-            std::cout<<sum.front()<<"sum_front"<<std::endl;
+            std::cout << "Thr2: got string: " << sum_buff.front() << std::endl;
+            int sum = 0;
+            for (auto &symbol:sum_buff.front())
+            {
+                if (isdigit(symbol)){
+                    sum += symbol - '0';
+                }
+            }
+            sum_buff.pop();
+
+            std::unique_lock<std::mutex> lock(mtx);
+            shared_sum.push(sum);
+            cv.notify_one();
         }
     }
+    std::unique_lock<std::mutex> lock(mtx);
+    stopped = true;
+    cv.notify_one();
+}
 
+
+void thread_2::thr_connect()
+{
+    int sum = -1;
+    bool reconnect = true;
+    while(true)
+    {
+        {
+            std::unique_lock<std::mutex> lock(mtx);
+            cv.wait(lock, [this](){return !shared_sum.empty() || stopped;});
+            if (stopped) return;
+            sum = shared_sum.front();
+            shared_sum.pop();
+        }
+
+        while (sum > 0)
+        {
+            if (reconnect)
+            {
+                std::this_thread::sleep_for(std::chrono::milliseconds(2000));
+                //if (!(connect(sock, reinterpret_cast<struct sockaddr *>( &addr), sizeof(addr)) < 0))
+                    //reconnect = false;
+                reconnect = false;
+            }
+            if(!reconnect)
+            {
+                std::cout<< sum << std::endl;
+                sum = -1;
+                /*if ((send(sock, reinterpret_cast<void *>(&sum), sizeof(sum), 0)) < 0)
+                        reconnect = true;
+                else sum = -1;*/
+            }
+        }
+    }
 }
 
 void thread_2::stop()
@@ -55,4 +103,6 @@ void thread_2::stop()
     close(sock);
     if (thr2.joinable())
         thr2.join();
+    if (thr3.joinable())
+        thr3.join();
 }

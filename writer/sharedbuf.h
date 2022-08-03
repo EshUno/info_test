@@ -12,12 +12,11 @@ class SharedBuf final
 public:
     SharedBuf();
     void put_data(const std::string &str);
-    std::queue<int> wait_and_get_data();
+    std::queue<std::string> wait_and_get_data();
     void stop();
 
 private:
     std::queue<std::string> buff;
-    bool data_ready;
     bool stopped;
     std::mutex mtx;
     std::condition_variable cv;

@@ -15,10 +15,18 @@ public:
 
 private:
     void work();
+    void thr_connect();
     SharedBuf &shared_buf;
     std::thread thr2;
+    std::thread thr3;
     int sock;
     struct sockaddr_in addr;
+
+    std::queue<int> shared_sum;
+    std::mutex mtx;
+    std::condition_variable cv;
+    bool stopped;
+
 };
 
 #endif // THREAD_2_H
