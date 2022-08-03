@@ -19,7 +19,7 @@ private:
     void thr_connect_stop();
     void addr_fill();
     void push_sum(int sum);
-    int count_sum(std::queue<std::string> &sum_buff);
+    int count_sum(std::string &buff_elem);
 
     SharedBuf &shared_buf;
     std::thread thr2;

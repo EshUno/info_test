@@ -48,18 +48,18 @@ void thread_2::work()
         if (sum_buff.empty()) break;
         while (!sum_buff.empty())
         {
-            push_sum(count_sum(sum_buff));
+            push_sum(count_sum(sum_buff.front()));
             sum_buff.pop();
         }
     }
     thr_connect_stop();
 }
 
-int thread_2::count_sum(std::queue<std::string> &sum_buff)
+int thread_2::count_sum(std::string &buff_elem)
 {
-    std::cout << "Thr2: got string: " << sum_buff.front() << std::endl;
+    std::cout << "Thr2: got string: " << buff_elem << std::endl;
     int sum = 0;
-    for (auto &symbol:sum_buff.front())
+    for (auto &symbol:buff_elem)
     {
         if (isdigit(symbol)){
             sum += symbol - '0';
@@ -96,7 +96,7 @@ void thread_2::thr_connect()
             shared_sum.pop();
         }
 
-        while (sum > 0)
+        while (sum >= 0)
         {
             if (reconnect)
             {

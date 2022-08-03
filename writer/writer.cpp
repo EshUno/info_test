@@ -14,7 +14,6 @@ void block_mask_fill(sigset_t &block_mask)
     sigaddset(&block_mask, SIGQUIT);
 }
 
-
 int main()
 {
     try{

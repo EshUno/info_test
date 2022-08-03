@@ -13,7 +13,14 @@ bool num_is_good(int num)
 
 int main()
 {
-   /* int sock_listen = socket(AF_UNIX, SOCK_STREAM, 0), len = 0;
+
+
+
+
+
+
+
+    /* int sock_listen = socket(AF_UNIX, SOCK_STREAM, 0), len = 0;
     int sum;
     struct sockaddr sa;
     sa.sa_family = AF_UNIX;
