@@ -26,12 +26,18 @@ void thread_2::start()
     {
         throw std::runtime_error(std::string("thread_2: ") + strerror(errno));
     }
+    addr_fill();
+    thr2 = std::thread(&thread_2::work, this);
+}
+
+void thread_2::addr_fill()
+{
     memset(&addr, 0, sizeof(struct sockaddr_in));
     addr.sin_family = AF_INET;
     addr.sin_port = htons(PORT_NUM);
     addr.sin_addr.s_addr = inet_addr("127.0.0.1");
-    thr2 = std::thread(&thread_2::work, this);
 }
+
 
 void thread_2::work()
 {   
@@ -42,26 +48,39 @@ void thread_2::work()
         if (sum_buff.empty()) break;
         while (!sum_buff.empty())
         {
-            std::cout << "Thr2: got string: " << sum_buff.front() << std::endl;
-            int sum = 0;
-            for (auto &symbol:sum_buff.front())
-            {
-                if (isdigit(symbol)){
-                    sum += symbol - '0';
-                }
-            }
+            push_sum(count_sum(sum_buff));
             sum_buff.pop();
-
-            std::unique_lock<std::mutex> lock(mtx);
-            shared_sum.push(sum);
-            cv.notify_one();
         }
     }
+    thr_connect_stop();
+}
+
+int thread_2::count_sum(std::queue<std::string> &sum_buff)
+{
+    std::cout << "Thr2: got string: " << sum_buff.front() << std::endl;
+    int sum = 0;
+    for (auto &symbol:sum_buff.front())
+    {
+        if (isdigit(symbol)){
+            sum += symbol - '0';
+        }
+    }
+    return sum;
+}
+
+void thread_2::push_sum(int sum)
+{
+    std::unique_lock<std::mutex> lock(mtx);
+    shared_sum.push(sum);
+    cv.notify_one();
+}
+
+void thread_2::thr_connect_stop()
+{
     std::unique_lock<std::mutex> lock(mtx);
     stopped = true;
     cv.notify_one();
 }
-
 
 void thread_2::thr_connect()
 {

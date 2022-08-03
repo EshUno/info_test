@@ -36,22 +36,27 @@ void thread_1::work()
         {
             std::sort(data.begin(), data.end(),
                       [](auto a, auto b){ return a > b;});
-            std::string ans;
-            for(auto &symbol: data)
-            {
-                int dig = symbol - '0';
-                if (dig % 2)
-                {
-                    ans += symbol;
-                }
-                else
-                {
-                    ans += KB;
-                }
-            }
-            shared_buf.put_data(ans);
+            convert_string(data);
         }
     }
+}
+
+void thread_1::convert_string(std::string &data)
+{
+    std::string ans;
+    for(auto &symbol: data)
+    {
+        int dig = symbol - '0';
+        if (dig % 2)
+        {
+            ans += symbol;
+        }
+        else
+        {
+            ans += KB;
+        }
+    }
+    shared_buf.put_data(ans);
 }
 
 bool thread_1::work_getline(std::string &input)
@@ -90,10 +95,8 @@ void thread_1::stop()
 {
     char byte = 0x42;
     write(pipe_fd[1], &byte, sizeof(byte));
-
     if (thr1.joinable())
         thr1.join();
-
     close(pipe_fd[0]);
     close(pipe_fd[1]);
 }

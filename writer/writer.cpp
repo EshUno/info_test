@@ -6,6 +6,15 @@
 #include <signal.h>
 #include <cstring>
 
+void block_mask_fill(sigset_t &block_mask)
+{
+    sigemptyset(&block_mask);
+    sigaddset(&block_mask, SIGINT);
+    sigaddset(&block_mask, SIGTERM);
+    sigaddset(&block_mask, SIGQUIT);
+}
+
+
 int main()
 {
     try{
@@ -17,10 +26,7 @@ int main()
          корректное завершение программы - закрыртие всех тредов, сокетов и каналов.
         */
         sigset_t block_mask;
-        sigemptyset(&block_mask);
-        sigaddset(&block_mask, SIGINT);
-        sigaddset(&block_mask, SIGTERM);
-        sigaddset(&block_mask, SIGQUIT);
+        block_mask_fill(block_mask);
         errno = 0;
         if (pthread_sigmask(SIG_SETMASK, &block_mask, nullptr) != 0)
         {

@@ -8,7 +8,6 @@
 class thread_2
 {
 public:
-    //передаем ссылку на разделяемый буфер в конструктор
     thread_2(SharedBuf &buf);
     ~thread_2();
     void start();
@@ -17,12 +16,16 @@ public:
 private:
     void work();
     void thr_connect();
+    void thr_connect_stop();
+    void addr_fill();
+    void push_sum(int sum);
+    int count_sum(std::queue<std::string> &sum_buff);
+
     SharedBuf &shared_buf;
     std::thread thr2;
     std::thread thr3;
     int sock;
     struct sockaddr_in addr;
-
     std::queue<int> shared_sum;
     std::mutex mtx;
     std::condition_variable cv;
