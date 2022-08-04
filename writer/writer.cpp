@@ -45,6 +45,7 @@ int main()
             {
                 throw std::runtime_error(std::string("main_thread: ") + strerror(errno));
             }
+            std::cout << "sig: " << sig << std::endl;
             /* получив сигнал, начинаем процедуру останоки потоков
              * для этого:
              * для первого потока: передаем байт, информирующий о завершении через канал

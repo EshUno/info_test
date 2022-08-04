@@ -20,6 +20,7 @@ private:
     void addr_fill();
     void push_sum(int sum);
     int count_sum(std::string &buff_elem);
+    void create_socket();
 
     SharedBuf &shared_buf;
     std::thread thr2;

@@ -27,11 +27,11 @@ void thread_1::start()
 void thread_1::work()
 {
     std::string data;
-    std::cout<< "Press ctrl+с for end" << std::endl;
+    std::cout<< "press ctrl+с for end" << std::endl;
     while (!work_getline(data))
     {
         if (!(data.size() <= 64) || !(all_sym_is_digit(data)))
-            std::cout<<"Wrong string"<<std::endl;
+            std::cout<<"wrong string"<<std::endl;
         else
         {
             std::sort(data.begin(), data.end(),
