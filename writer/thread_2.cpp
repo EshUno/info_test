@@ -93,7 +93,6 @@ void thread_2::thr_connect()
 {
     int sum = -1;
     bool connected = false;
-    bool first_connect = true;
 
     while(true)
     {
@@ -112,14 +111,16 @@ void thread_2::thr_connect()
             if (!connected)
             {
                 std::this_thread::sleep_for(std::chrono::milliseconds(2000));
-
                 auto connectRes = connect(sock, reinterpret_cast<struct sockaddr *>( &addr), sizeof(addr));
                 if (connectRes == 0)
                 {
                     connected = true;
-                    first_connect = false;
                 }
-                else std::cout << "connect: " << strerror(errno) << std::endl;
+                else
+                {
+                    std::cout << "connect: " << strerror(errno) << std::endl;
+                    if (stopped) return;
+                }
             }
 
             if(connected)

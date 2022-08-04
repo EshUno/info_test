@@ -4,6 +4,7 @@
 #include "sharedbuf.h"
 #include <thread>
 #include <arpa/inet.h>
+#include <atomic>
 
 class thread_2
 {
@@ -30,7 +31,7 @@ private:
     std::queue<int> shared_sum;
     std::mutex mtx;
     std::condition_variable cv;
-    bool stopped;
+    std::atomic<bool> stopped;
 
 };
 
