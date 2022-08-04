@@ -6,6 +6,7 @@
 #include <string>
 #include <iostream>
 #include <queue>
+#include <atomic>
 
 class SharedBuf final
 {
@@ -18,7 +19,7 @@ public:
 private:
     //очередь для передачи обработанных 1 потоком данных во 2 поток
     std::queue<std::string> buff;
-    bool stopped;
+    std::atomic<bool> stopped;
     std::mutex mtx;
     std::condition_variable cv;
 };

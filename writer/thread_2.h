@@ -4,7 +4,6 @@
 #include "sharedbuf.h"
 #include <thread>
 #include <arpa/inet.h>
-#include <atomic>
 
 class thread_2
 {
