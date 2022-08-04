@@ -45,7 +45,10 @@ void thread_2::work()
     while(true){
          //возвращает пустую очередь если прервался поток 1
         auto sum_buff = shared_buf.wait_and_get_data();
-        if (sum_buff.empty()) break;
+        if (sum_buff.empty())
+        {
+            break;
+        }
         while (!sum_buff.empty())
         {
             push_sum(count_sum(sum_buff.front()));
@@ -99,13 +102,13 @@ void thread_2::thr_connect()
 
         while (sum >= 0)
         {
+            std::cout<< "reconnect"<<std::endl;
             if (reconnect)
             {
                 if (!first_connect) std::this_thread::sleep_for(std::chrono::milliseconds(2000));
                 first_connect = false;
-                if (!(connect(sock, reinterpret_cast<struct sockaddr *>( &addr), sizeof(addr)) < 0))
+                if (connect(sock, reinterpret_cast<struct sockaddr *>( &addr), sizeof(addr)) >= 0)
                     reconnect = false;
-                reconnect = false;
             }
             if(!reconnect)
             {
