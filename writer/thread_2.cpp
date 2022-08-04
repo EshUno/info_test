@@ -8,7 +8,10 @@
 #include <cstring>
 
 
-thread_2::thread_2(SharedBuf &buf): shared_buf(buf)
+thread_2::thread_2(SharedBuf &buf, std::string host, std::uint16_t port):
+    host(std::move(host)),
+    port(port),
+    shared_buf(buf)
 {
     stopped = false;
 }
@@ -39,8 +42,8 @@ void thread_2::addr_fill()
 {
     memset(&addr, 0, sizeof(struct sockaddr_in));
     addr.sin_family = AF_INET;
-    addr.sin_port = htons(PORT_NUM);
-    addr.sin_addr.s_addr = inet_addr("127.0.0.1");
+    addr.sin_port = htons(port);
+    addr.sin_addr.s_addr = inet_addr(host.data());
 }
 
 void thread_2::work()

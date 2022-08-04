@@ -12,7 +12,7 @@ bool num_is_good(int num)
     return ((num > 99) && (num % 32 == 0));
 }
 
-int main()
+int main(int argc, char *argv[])
 {
     errno = 0;
     int server_fd = socket(AF_INET, SOCK_STREAM, 0);
@@ -25,6 +25,10 @@ int main()
     memset(&s_addr, 0, sizeof(struct sockaddr_in));
     s_addr.sin_family = AF_INET;
     s_addr.sin_port = htons(PORT_NUM);
+    if (argc == 2)
+    {
+        s_addr.sin_port = htons(std::atoi(argv[1]));
+    }
     s_addr.sin_addr.s_addr = htonl(INADDR_ANY);
     int reuse = 1;
     if( setsockopt(server_fd, SOL_SOCKET, SO_REUSEPORT, (const char*)&reuse, sizeof(reuse)) < 0)

@@ -8,7 +8,8 @@
 class thread_2
 {
 public:
-    thread_2(SharedBuf &buf);
+    thread_2();
+    thread_2(SharedBuf &buf, std::string host, std::uint16_t port);
     ~thread_2();
     void start();
     void stop();
@@ -22,10 +23,12 @@ private:
     int count_sum(std::string &buff_elem);
     void create_socket();
 
+    std::string host;
+    int port;
     SharedBuf &shared_buf;
     std::thread thr2;
     std::thread thr3;
-    int sock;
+    std::uint16_t sock;
     struct sockaddr_in addr;
     std::queue<int> shared_sum;
     std::mutex mtx;
