@@ -22,7 +22,6 @@ void thread_1::start()
 void thread_1::work()
 {
     std::string data;
-    std::cout<< "press ctrl+с for end" << std::endl;
     while (getline(std::cin, data))
     {
         if (!(data.size() <= 64) || !(all_sym_is_digit(data)))

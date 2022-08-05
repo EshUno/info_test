@@ -75,7 +75,7 @@ int main(int argc, char *argv[])
             if (num_is_good(no))
                 std::cout<< "got result: "<< no << std::endl;
             else
-                std::cout<< "error "<< no << std::endl;
+                std::cout<< "error result "<< no << std::endl;
         }
     }
     close(client_fd);
