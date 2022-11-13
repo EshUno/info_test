@@ -24,7 +24,7 @@ void SharedBuf::put_data(const std::string &str)
 
 std::queue<std::string> SharedBuf::wait_and_get_data()
 {
-    std::queue<std::string>  data_buff;
+    std::queue<std::string> data_buff;
     {
         std::unique_lock<std::mutex> lock(mtx);
         cv.wait(lock, [this](){return !buff.empty() || stopped;});

@@ -13,13 +13,10 @@ public:
     void stop();
 
 private:
-    //канал - используется для сигнала остановки с терминала
-    int pipe_fd[2];
     SharedBuf &shared_buf;
     std::thread thr1;
     const std::string KB = "KB";
     void work();
-    bool work_getline(std::string &data);
     bool all_sym_is_digit(std::string &data);
     void convert_string(std::string &data);
 };
